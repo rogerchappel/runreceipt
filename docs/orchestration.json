@@ -1,0 +1,24 @@
+{
+  "name": "runreceipt",
+  "version": 1,
+  "commands": {
+    "capture": "runreceipt exec -- <command> [args...]",
+    "show": "runreceipt show .runreceipt/latest.json",
+    "verify": "runreceipt verify .runreceipt/latest.json",
+    "list": "runreceipt list --dir .runreceipt"
+  },
+  "artifacts": {
+    "runReceiptJson": ".runreceipt/runs/<id>/receipt.json",
+    "runReceiptMarkdown": ".runreceipt/runs/<id>/receipt.md",
+    "latestJson": ".runreceipt/latest.json",
+    "latestMarkdown": ".runreceipt/latest.md",
+    "stdout": ".runreceipt/runs/<id>/stdout.txt",
+    "stderr": ".runreceipt/runs/<id>/stderr.txt"
+  },
+  "security": {
+    "recordsFullEnvironment": false,
+    "envCaptureMode": "allowlist",
+    "defaultRedactionPatterns": ["secret", "token", "password", "passwd", "credential", "api[_-]?key"],
+    "preservesChildExitCode": true
+  }
+}

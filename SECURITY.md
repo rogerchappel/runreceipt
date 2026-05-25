@@ -2,18 +2,9 @@
 
 ## Supported Versions
 
-Replace this section with the supported versions for `runreceipt`.
-
-Example:
-
-```md
 | Version | Supported |
 | --- | --- |
-| .x | Yes |
-| < .0 | No |
-```
-
-If the project does not publish versioned releases yet, say that clearly.
+| 0.x | Best effort before 1.0 |
 
 ## Reporting a Vulnerability
 
