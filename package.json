@@ -3,20 +3,34 @@
   "version": "0.1.0",
   "description": "Local-first command receipts with captured output and verification",
   "type": "module",
-  "main": "./src/index.js",
+  "bin": {
+    "runreceipt": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./dist/index.js"
   },
   "files": [
-    "src",
-    "README.md"
+    "dist",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
   ],
   "scripts": {
-    "test": "node --test",
+    "build": "tsc",
+    "check": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "smoke": "npm run build && bash scripts/smoke.sh",
     "package:smoke": "npm pack --dry-run",
-    "release:check": "npm test && npm run package:smoke"
+    "release:check": "npm test && npm run check && npm run smoke && npm run package:smoke"
   },
-  "keywords": [],
-  "author": "StackForge User",
+  "keywords": [
+    "cli",
+    "receipt",
+    "verification",
+    "testing",
+    "local-first"
+  ],
+  "author": "Roger Chappel",
   "license": "MIT"
 }
