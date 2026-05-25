@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.runreceipt/
+*.tgz
+.DS_Store
