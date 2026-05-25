@@ -72,7 +72,7 @@ export function renderList(receipts: RunReceipt[], rootDir: string): string {
 
   return receipts
     .map((receipt) => {
-      const jsonPath = path.relative(process.cwd(), path.resolve(rootDir, receipt.receipt.jsonPath));
+      const jsonPath = path.relative(process.cwd(), path.resolve(receipt.cwd, receipt.receipt.jsonPath));
       return `${receipt.startTime}  exit=${receipt.exitCode ?? 'signal'}  ${receipt.id}  ${receipt.commandDisplay}  ${jsonPath}`;
     })
     .join('\n');

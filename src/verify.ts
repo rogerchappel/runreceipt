@@ -6,7 +6,6 @@ import type { RunReceipt, VerifyResult } from './types.js';
 export async function verifyReceipt(receiptPath: string): Promise<VerifyResult> {
   const absoluteReceiptPath = path.resolve(receiptPath);
   const receipt = await readJson<RunReceipt>(absoluteReceiptPath);
-  const baseDir = path.resolve(path.dirname(absoluteReceiptPath), '..', '..');
   const checks: VerifyResult['checks'] = [];
 
   checks.push({ name: 'schemaVersion', ok: receipt.schemaVersion === 1, expected: 1, actual: receipt.schemaVersion });
@@ -24,7 +23,7 @@ export async function verifyReceipt(receiptPath: string): Promise<VerifyResult> 
 
   async function checkStream(name: string, streamPath: string, expectedHash: string, expectedBytes: number): Promise<void> {
     try {
-      const actual = await hashFile(path.resolve(baseDir, streamPath));
+      const actual = await hashFile(path.resolve(receipt.cwd, streamPath));
       checks.push({
         name: `${name}.sha256`,
         ok: actual.sha256 === expectedHash,
