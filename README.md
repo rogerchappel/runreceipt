@@ -58,6 +58,14 @@ runreceipt exec --env CI,GITHUB_SHA --redact GITHUB_SHA -- npm test
 allowlisted keys and redacts sensitive-looking keys such as tokens, passwords,
 credentials, and API keys.
 
+## Demo recipes
+
+- [Command receipt demo](examples/command-receipt-demo.md) shows a local smoke
+  command, then inspects and verifies the generated receipt.
+- [Promotion brief](docs/promo/video-brief.md) gives a short video outline and
+  grounded social hooks for explaining the workflow without making adoption
+  claims.
+
 ## Verify
 
 Run the local validation script before opening a pull request:
