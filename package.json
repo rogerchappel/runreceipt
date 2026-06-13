@@ -16,7 +16,9 @@
     "examples",
     "README.md",
     "SECURITY.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
   ],
   "scripts": {
     "build": "tsc",
@@ -39,5 +41,13 @@
   "devDependencies": {
     "@types/node": "^25.9.1",
     "typescript": "^6.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/runreceipt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/runreceipt/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/runreceipt#readme"
 }
