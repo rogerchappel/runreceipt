@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, unlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -56,6 +56,58 @@ test('verifyReceipt reports tampered output', async () => {
 
     assert.equal(result.ok, false);
     assert.ok(result.checks.some((check) => check.name === 'stdout.sha256' && !check.ok));
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});
+
+test('verifyReceipt reports missing markdown artifact', async () => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), 'runreceipt-'));
+
+  try {
+    const receipt = await execWithReceipt({
+      command: [process.execPath, '-e', 'process.stdout.write("ok")'],
+      cwd,
+      outDir: '.runreceipt',
+      envAllowlist: [],
+      redactKeys: []
+    });
+
+    await unlink(path.join(cwd, receipt.receipt.markdownPath));
+    const result = await verifyReceipt(path.join(cwd, receipt.receipt.jsonPath));
+
+    assert.equal(result.ok, false);
+    assert.ok(result.checks.some((check) => check.name === 'receipt.markdownPath' && !check.ok));
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});
+
+test('verifyReceipt reports impossible timing metadata', async () => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), 'runreceipt-'));
+
+  try {
+    const receipt = await execWithReceipt({
+      command: [process.execPath, '-e', 'process.stdout.write("ok")'],
+      cwd,
+      outDir: '.runreceipt',
+      envAllowlist: [],
+      redactKeys: []
+    });
+    const receiptPath = path.join(cwd, receipt.receipt.jsonPath);
+    const tampered = {
+      ...receipt,
+      startTime: '2026-06-20T10:00:00.000Z',
+      endTime: '2026-06-20T09:59:59.000Z',
+      durationMs: -1
+    };
+    await writeFile(receiptPath, JSON.stringify(tampered, null, 2), 'utf8');
+
+    const result = await verifyReceipt(receiptPath);
+
+    assert.equal(result.ok, false);
+    assert.ok(result.checks.some((check) => check.name === 'timeRange' && !check.ok));
+    assert.ok(result.checks.some((check) => check.name === 'durationMs' && !check.ok));
   } finally {
     await rm(cwd, { recursive: true, force: true });
   }
