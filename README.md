@@ -19,6 +19,10 @@ npm link
 
 The CLI binary is `runreceipt`.
 
+## Agent Skill
+
+See [SKILL.md](SKILL.md) for when an agent should use `runreceipt`, what side effects it has, and how to report verification evidence safely.
+
 ## Use
 
 Capture a command and write JSON and Markdown receipts:
@@ -36,7 +40,7 @@ Inspect the latest receipt:
 runreceipt show .runreceipt/latest.json
 ```
 
-Verify captured stdout/stderr hashes and byte counts:
+Verify captured stdout/stderr hashes, byte counts, receipt artifacts, and basic timing metadata:
 
 ```sh
 runreceipt verify .runreceipt/latest.json
