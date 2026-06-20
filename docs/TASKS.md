@@ -11,6 +11,7 @@
 - [x] Add env allowlist and redaction support.
 - [x] Add focused tests and smoke coverage.
 - [x] Document basic usage and verification.
+- [x] Add receipt artifact and timing integrity checks.
 
 ## Next
 
