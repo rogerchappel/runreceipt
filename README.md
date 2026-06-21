@@ -34,6 +34,13 @@ runreceipt exec -- npm test
 Receipts are written to `.runreceipt/runs/<id>/`, with convenience copies at
 `.runreceipt/latest.json` and `.runreceipt/latest.md`.
 
+For a disposable demo that captures, shows, verifies, and lists a safe command
+receipt, run:
+
+```sh
+bash demo/run-command-receipt.sh
+```
+
 Inspect the latest receipt:
 
 ```sh
