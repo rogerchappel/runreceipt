@@ -17,6 +17,12 @@ metadata, and a verification step.
 5. Mention the privacy boundary: environment keys are not captured unless they
    are allowlisted with `--env`.
 
+## Alternate env-redaction beat
+
+Run `bash demo/run-env-redaction-receipt.sh` when the story needs to show
+selected environment context. The receipt includes `RUNRECEIPT_DEMO_MODE` and
+redacts `RUNRECEIPT_DEMO_TOKEN` plus `RUNRECEIPT_DEMO_SHA`.
+
 ## Social hooks
 
 - Local command receipts for tests, builds, and handoffs: run it, save the
