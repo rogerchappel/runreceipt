@@ -73,6 +73,9 @@ credentials, and API keys.
 
 - [Command receipt demo](examples/command-receipt-demo.md) shows a local smoke
   command, then inspects and verifies the generated receipt.
+- [Env redaction receipt demo](examples/env-redaction-receipt.md) captures
+  allowlisted demo variables while proving token-like and explicitly redacted
+  values are hidden in the receipt.
 - [Promotion brief](docs/promo/video-brief.md) gives a short video outline and
   grounded social hooks for explaining the workflow without making adoption
   claims.
