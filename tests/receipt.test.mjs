@@ -61,6 +61,38 @@ test('verifyReceipt reports tampered output', async () => {
   }
 });
 
+test('verifyReceipt rejects stream and artifact paths outside cwd without reading targets', async () => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), 'runreceipt-'));
+  const outside = path.join(path.dirname(cwd), `outside-${path.basename(cwd)}`);
+
+  try {
+    const receipt = await execWithReceipt({
+      command: [process.execPath, '-e', 'process.stdout.write("ok")'],
+      cwd,
+      outDir: '.runreceipt',
+      envAllowlist: [],
+      redactKeys: []
+    });
+    await writeFile(outside, 'sensitive outside content', 'utf8');
+    const receiptPath = path.join(cwd, receipt.receipt.jsonPath);
+    const tampered = {
+      ...receipt,
+      stdout: { ...receipt.stdout, path: `../${path.basename(outside)}` },
+      receipt: { ...receipt.receipt, markdownPath: `../${path.basename(outside)}` }
+    };
+    await writeFile(receiptPath, JSON.stringify(tampered), 'utf8');
+
+    const result = await verifyReceipt(receiptPath);
+    assert.equal(result.ok, false);
+    assert.ok(result.checks.some((check) => check.name === 'stdout' && !check.ok && check.expected === 'path within receipt cwd'));
+    assert.ok(result.checks.some((check) => check.name === 'receipt.markdownPath' && !check.ok && check.expected === 'path within receipt cwd'));
+    assert.equal(await readFile(outside, 'utf8'), 'sensitive outside content');
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+    await rm(outside, { force: true });
+  }
+});
+
 test('verifyReceipt reports missing markdown artifact', async () => {
   const cwd = await mkdtemp(path.join(os.tmpdir(), 'runreceipt-'));
 

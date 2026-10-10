@@ -38,7 +38,12 @@ export async function verifyReceipt(receiptPath: string): Promise<VerifyResult> 
 
   async function checkStream(name: string, streamPath: string, expectedHash: string, expectedBytes: number): Promise<void> {
     try {
-      const actual = await hashFile(path.resolve(receipt.cwd, streamPath));
+      const resolvedPath = resolveWithinCwd(streamPath);
+      if (!resolvedPath) {
+        checks.push({ name, ok: false, expected: 'path within receipt cwd', actual: streamPath });
+        return;
+      }
+      const actual = await hashFile(resolvedPath);
       checks.push({
         name: `${name}.sha256`,
         ok: actual.sha256 === expectedHash,
@@ -61,9 +66,23 @@ export async function verifyReceipt(receiptPath: string): Promise<VerifyResult> 
     }
   }
 
+  function resolveWithinCwd(candidate: string): string | undefined {
+    const cwd = path.resolve(receipt.cwd);
+    const resolved = path.resolve(cwd, candidate);
+    const relative = path.relative(cwd, resolved);
+    return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative))
+      ? resolved
+      : undefined;
+  }
+
   async function checkReceiptArtifact(name: string, artifactPath: string): Promise<void> {
     try {
-      await access(path.resolve(receipt.cwd, artifactPath));
+      const resolvedPath = resolveWithinCwd(artifactPath);
+      if (!resolvedPath) {
+        checks.push({ name, ok: false, expected: 'path within receipt cwd', actual: artifactPath });
+        return;
+      }
+      await access(resolvedPath);
       checks.push({ name, ok: true, expected: 'exists', actual: artifactPath });
     } catch (error) {
       checks.push({
